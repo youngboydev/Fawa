@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b0a">
+  <meta name="description" content="Football Live HD PRO — football scores, fixtures and authorized live streams.">
+  <title>Football Live HD PRO</title>
+
+  <style>
+    :root {
+      --bg: #080b0a;
+      --panel: #111714;
+      --panel2: #18221c;
+      --line: #26352b;
+      --green: #39e879;
+      --text: #f5f7f5;
+      --muted: #9aa79e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      height: 70px;
+      padding: 0 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      background: #0c100e;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -.6px;
+    }
+
+    .logo span { color: var(--green); }
+
+    .nav {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav a:hover { color: var(--green); }
+
+    .live-label {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .hero {
+      padding: 54px 6% 42px;
+      background:
+        radial-gradient(ellipse at 80% 10%, #173b25 0, transparent 45%),
+        linear-gradient(120deg, #101913, #080b0a 65%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.04;
+      max-width: 700px;
+      margin: 16px 0;
+    }
+
+    h1 span { color: var(--green); }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 530px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 17px;
+      color: var(--text);
+      background: var(--panel2);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn.primary {
+      background: var(--green);
+      color: #07110a;
+      border-color: var(--green);
+    }
+
+    main {
+      max-width: 1400px;
+      margin: auto;
+      padding: 30px 6% 60px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    h2 { font-size: 23px; margin: 0; }
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .filter {
+      padding: 10px 15px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+
+    .filter.active {
+      background: var(--green);
+      color: #061009;
+      border-color: var(--green);
+      font-weight: bold;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(270px, .8fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .match-list { display: grid; gap: 13px; }
+
+    .match {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 17px;
+    }
+
+    .match-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .team:last-child { justify-content: flex-end; text-align: right; }
+
+    .crest {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--panel2);
+      font-size: 19px;
+    }
+
+    .score {
+      font-size: 20px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .match-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .watch {
+      border: 0;
+      border-radius: 6px;
+      background: var(--green);
+      color: #061009;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .side-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      margin-bottom: 16px;
+    }
+
+    .side-card h3 { margin: 0 0 15px; font-size: 17px; }
+
+    .league {
+      display: flex;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .league:last-child { border-bottom: 0; }
+
+    .player {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      scroll-margin-top: 90px;
+    }
+
+    .player video {
+      display: block;
+      width: 100%;
+      max-height: 520px;
+      background: #000;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+
+    .player input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .notice {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 25px 6%;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0 5%; height: 62px; }
+      .nav { gap: 12px; }
+      .nav a { font-size: 12px; }
+      .nav a:nth-child(2) { display: none; }
+      .logo { font-size: 17px; }
+      .hero { padding: 42px 5% 35px; }
+      main { padding: 25px 5% 45px; }
+      .layout { grid-template-columns: 1fr; }
+      .side { display: grid; grid-template-columns: 1fr; }
+      .team { font-size: 12px; gap: 5px; }
+      .crest { width: 30px; height: 30px; font-size: 16px; }
+      .score { font-size: 17px; }
+      .match { padding: 13px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="logo">FOOTBALL<span>LIVE</span> HD</div>
+    <nav class="nav">
+      <a href="#matches">Matches</a>
+      <a href="#leagues">Competitions</a>
+      <a href="#player">Watch</a>
+    </nav>
+    <div class="live-label">● MATCH CENTRE</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">YOUR FOOTBALL HUB</div>
+    <h1>Every match.<br><span>One destination.</span></h1>
+    <p>
+      Follow football scores, discover upcoming fixtures and watch
+      authorized streams from one simple match centre.
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#matches">Explore matches ↓</a>
+      <a class="btn" href="#player">Open video player ▶</a>
+    </div>
+  </section>
+
+  <main>
+    <section id="matches">
+      <div class="section-head">
+        <h2>Football matches</h2>
+        <span class="muted" id="match-count">Demo matches</span>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="live">Live</button>
+        <button class="filter" data-filter="upcoming">Upcoming</button>
+        <button class="filter" data-filter="finished">Finished</button>
+      </div>
+
+      <div class="layout">
+        <div class="match-list" id="match-list">
+          <article class="match" data-status="upcoming">
+            <div class="match-top">
+              <span>Premier League · DEMO</span>
+              <span>Upcoming</span>
+            </div>
+            <div class="teams">
+              <div class="team"><span class="crest">🔴</span> Arsenal</div>
+              <div class="score">VS</div>
+              <div class="team"><span class="crest">🔵</span> Chelsea</div>
+            </div>
+            <div class="match-bottom">
+              <span class="muted">Example match — not live data</span>
+              <button class="watch" data-watch="demo">WATCH</button>
+            </div>
+          </article>
+
+          <article class="match" data-status="finished">
+            <div class="match-top">
+              <span>La Liga · DEMO</span>
+              <span>Finished</span>
+            </div>
+            <div class="teams">
+              <div class="team"><span class="crest">⚪</span> Real Madrid</div>
+              <div class="score">2 - 1</div>
+              <div class="team"><span class="crest">🔵</span> Barcelona</div>
+            </div>
+            <div class="match-bottom">
+              <span class="muted">Example result — not real data</span>
+              <button class="watch" data-watch="demo">WATCH</button>
+            </div>
+          </article>
+        </div>
+
+        <aside class="side" id="leagues">
+          <div class="side-card">
+            <h3>🏆 Competitions</h3>
+            <div class="league"><span>🏴 Premier League</span><span>ENG</span></div>
+            <div class="league"><span>🇪🇸 La Liga</span><span>ESP</span></div>
+            <div class="league"><span>🇮🇹 Serie A</span><span>ITA</span></div>
+            <div class="league"><span>🇩🇪 Bundesliga</span><span>GER</span></div>
+            <div class="league"><span>🌍 Champions League</span><span>UCL</span></div>
+          </div>
+
+          <div class="side-card">
+            <h3>📺 Watch centre</h3>
+            <p class="muted">
+              Open a match to access your authorized video stream.
+              Availability depends on the stream provider.
+            </p>
+            <a class="btn primary" href="#player">Open player</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="player" id="player">
+      <div class="section-head">
+        <h2 id="player-title">Video player</h2>
+        <button class="filter" id="close-player">Close ✕</button>
+      </div>
+
+      <p class="notice">
+        Enter a direct video URL that you own or are authorized to stream.
+        Compatible MP4 and browser-supported media URLs may play directly.
+        Some HLS streams require additional player support.
+      </p>
+
+      <label for="stream-url" class="muted">Authorized stream URL</label>
+      <input id="stream-url" type="url" placeholder="https://example.com/your-authorized-stream.m3u8">
+
+      <button class="btn primary" id="load-stream">Load stream ▶</button>
+
+      <video id="video" controls playsinline preload="metadata">
+        Your browser does not support HTML video.
+      </video>
+
+      <p class="notice" id="player-message" aria-live="polite">
+        No stream loaded. Demo match cards do not contain real broadcasts.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Football Live HD PRO</strong><br>
+    An independent football information project. Match data and video
+    broadcasting are provided separately. Watch only streams you are
+    authorized to access.
+  </footer>
+
+  
+const matchList = document.getElementById("match-list");
+const matchCount = document.getElementById("match-count");
+const filterButtons = document.querySelectorAll("[data-filter]");
+
+const player = document.getElementById("player");
+const video = document.getElementById("video");
+const streamInput = document.getElementById("stream-url");
+const playerMessage = document.getElementById("player-message");
+
+let allMatches = [];
+let activeFilter = "all";
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function getStatus(match) {
+  const status = match.status;
+
+  if (["IN_PLAY", "PAUSED", "LIVE"].includes(status)) {
+    return "live";
+  }
+
+  if (status === "FINISHED") {
+    return "finished";
+  }
+
+  if (["POSTPONED", "CANCELLED", "SUSPENDED",
+       "AWARDED"].includes(status)) {
+    return "other";
+  }
+
+  return "upcoming";
+}
+
+function getStatusLabel(match) {
+  const status = match.status;
+
+  if (status === "IN_PLAY" || status === "LIVE") {
+    return match.minute
+      ? `LIVE · ${match.minute}'`
+      : "LIVE";
+  }
+
+  if (status === "PAUSED") return "HALF-TIME";
+  if (status === "FINISHED") return "FULL-TIME";
+  if (status === "POSTPONED") return "POSTPONED";
+  if (status === "CANCELLED") return "CANCELLED";
+  if (status === "SUSPENDED") return "SUSPENDED";
+  if (status === "AWARDED") return "AWARDED";
+
+  return "UPCOMING";
+}
+
+function formatKickoff(utcDate) {
+  if (!utcDate) return "Time unavailable";
+
+  const date = new Date(utcDate);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Time unavailable";
+  }
+
+  return date.toLocaleString(undefined, {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function safeCrest(url) {
+  if (typeof url !== "string") return "";
+
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.protocol === "https:") {
+      return parsed.href;
+    }
+  } catch (_) {}
+
+  return "";
+}
+
+function crestHTML(url, fallback) {
+  const safeURL = safeCrest(url);
+
+  if (!safeURL) {
+    return `<span class="crest">${fallback}</span>`;
+  }
+
+  return `
+    <span class="crest">
+      <img
+        src="${escapeHTML(safeURL)}"
+        alt=""
+        loading="lazy"
+        style="width:100%;height:100%;object-fit:contain"
+        onerror="this.replaceWith(document.createTextNode('⚽'))"
+      >
+    </span>
+  `;
+}
+
+function renderMatches() {
+  const filtered = allMatches.filter(match => {
+    if (activeFilter === "all") return true;
+
+    return getStatus(match) === activeFilter;
+  });
+
+  matchCount.textContent =
+    `${filtered.length} match${filtered.length === 1 ? "" : "es"}`;
+
+  if (filtered.length === 0) {
+    matchList.innerHTML = `
+      <div class="side-card">
+        <h3>No matches found</h3>
+        <p class="muted">
+          No matches are available for this filter.
+          Try another filter or refresh later.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  matchList.innerHTML = filtered.map(match => {
+    const status = getStatus(match);
+    const homeScore = match.homeScore;
+    const awayScore = match.awayScore;
+
+    const hasScore =
+      homeScore !== null && homeScore !== undefined &&
+      awayScore !== null && awayScore !== undefined;
+
+    const score = hasScore
+      ? `${escapeHTML(homeScore)} - ${escapeHTML(awayScore)}`
+      : "VS";
+
+    const home = escapeHTML(match.homeTeam || "Home");
+    const away = escapeHTML(match.awayTeam || "Away");
+    const competition = escapeHTML(match.competition || "Football");
+
+    const timeLabel = status === "upcoming"
+      ? formatKickoff(match.utcDate)
+      : getStatusLabel(match);
+
+    return `
+      <article class="match" data-status="${status}">
+        <div class="match-top">
+          <span>${competition}</span>
+          <span>${escapeHTML(timeLabel)}</span>
+        </div>
+
+        <div class="teams">
+          <div class="team">
+            ${crestHTML(match.homeCrest, "⚽")}
+            <span>${home}</span>
+          </div>
+
+          <div class="score">${score}</div>
+
+          <div class="team">
+            <span>${away}</span>
+            ${crestHTML(match.awayCrest, "⚽")}
+          </div>
+        </div>
+
+        <div class="match-bottom">
+          <span class="muted">
+            ${status === "live" ? "Live match" :
+              status === "finished" ? "Match completed" :
+              status === "other" ? "Match status update" :
+              "Kick-off: " + escapeHTML(formatKickoff(match.utcDate))}
+          </span>
+
+          <button class="watch" data-watch="${escapeHTML(match.id)}">
+            WATCH
+          </button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    filterButtons.forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+
+    activeFilter = button.dataset.filter;
+    renderMatches();
+  });
+});
+
+async function loadMatches() {
+  matchCount.textContent = "Loading matches…";
+
+  try {
+    const response = await fetch("/.netlify/functions/matches", {
+      headers: { "Accept": "application/json" }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to load matches.");
+    }
+
+    if (!Array.isArray(data.matches)) {
+      throw new Error("Unexpected match data received.");
+    }
+
+    allMatches = data.matches;
+    renderMatches();
+  } catch (error) {
+    console.error("Football matches:", error);
+
+    matchCount.textContent = "Unable to load";
+
+    matchList.innerHTML = `
+      <div class="side-card">
+        <h3>Couldn't load matches</h3>
+        <p class="muted">
+          Check your Netlify deployment, API key, and function endpoint.
+        </p>
+        <button class="btn primary" id="retry-matches">
+          Try again
+        </button>
+      </div>
+    `;
+
+    document.getElementById("retry-matches")
+      .addEventListener("click", loadMatches);
+  }
+}
+
+// The Watch button opens the player. It does not invent a broadcast URL.
+matchList.addEventListener("click", event => {
+  const button = event.target.closest("[data-watch]");
+
+  if (!button) return;
+
+  const match = allMatches.find(
+    item => String(item.id) === button.dataset.watch
+  );
+
+  if (!match) return;
+
+  player.style.display = "block";
+
+  document.getElementById("player-title").textContent =
+    `${match.homeTeam} vs ${match.awayTeam}`;
+
+  playerMessage.textContent =
+    "No stream is attached to this match yet. Enter a stream URL you are authorized to use.";
+
+  player.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.getElementById("close-player").addEventListener("click", () => {
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  player.style.display = "none";
+});
+
+document.getElementById("load-stream").addEventListener("click", () => {
+  const value = streamInput.value.trim();
+
+  try {
+    const url = new URL(value);
+
+    if (!["https:", "http:"].includes(url.protocol)) {
+      throw new Error("Invalid URL");
+    }
+
+    video.pause();
+    video.src = url.href;
+    video.load();
+
+    playerMessage.textContent =
+      "Stream loaded. Press Play. The provider must permit playback on this website.";
+
+    video.play().catch(() => {
+      playerMessage.textContent =
+        "Stream loaded. Press Play. If playback fails, check the URL, video format, and provider restrictions.";
+    });
+  } catch (_) {
+    playerMessage.textContent =
+      "Enter a valid HTTP or HTTPS URL for an authorized stream.";
+  }
+});
+
+loadMatches();
+
+// Refresh match data every 60 seconds.
+setInterval(loadMatches, 60000);
+
+  </script>
+</body>
+</html>

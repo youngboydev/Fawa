@@ -1,0 +1,13 @@
+
+{
+  "name": "football-live-hd-pro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Football scores, fixtures and authorized live streams",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "devDependencies": {
+    "netlify-cli": "^23.0.0"
+  }
+}
